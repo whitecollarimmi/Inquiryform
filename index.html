@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>White Collar Inquiry Form</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="animation-wrapper">
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+        <div class="particle particle-4"></div>
+        <div class="particle particle-5"></div>
+        <div class="particle particle-6"></div>
+        <div class="particle particle-7"></div>
+        <div class="particle particle-8"></div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="form-container">
+                    <div class="title-box">
+                        <img src="icon_image-removebg-preview.png" alt="Logo">
+                        <h2>WhiteCollar Inquiry Form</h2>
+                    </div>
+                    <form name="google-sheet">
+                        <!-- Personal Information Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">Personal Information</h3>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <input type="text" name="Name" class="form-control" placeholder="Full Name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <input type="email" name="Email" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" class="form-control" placeholder="Email" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <input type="tel" name="Student phone" id="phone" class="form-control" placeholder="Student Phone Number (10 digits)" pattern="[0-9]{10}" maxlength="10" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <input type="date" name="DOB" class="form-control" required>
+                                    <label for="dateOfBirth" class="date-label">Date of Birth</label>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <input type="text" name="Parents Name" class="form-control" placeholder="Father/Mother/Husband's Name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <input type="text" name="Parents Occupation" class="form-control" placeholder="Father/Mother/Husband's Occupation" required>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <input type="tel" name="Parents phone" id="phone" class="form-control" placeholder="Parent/Husband Phone Number (10 digits)" pattern="[0-9]{10}" maxlength="10" required>
+                                </div>
+                                
+                                <div class="col-md-12 mb-3">
+                                    <input type="text" name="address" class="form-control" placeholder="Address" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="section-title">Educational Information</h3>
+                            
+                            <!-- 10th Standard -->
+                            <div class="education-subsection">
+                                <h4>10th Standard</h4>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <input type="number" name="10thYear" class="form-control" placeholder="Completion Year" min="1950" max="2099" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <input type="text" name="10thSchool" class="form-control" placeholder="School Name" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <input type="text" name="10th board" class="form-control" placeholder="10th Board Name" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <input type="number" name="10thPercentage" class="form-control" placeholder="Percentage" min="0" max="100" step="0.01" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 12th Standard -->
+                            <div class="education-subsection">
+                                <h4>12th Standard</h4>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <input type="number" name="12thYear" class="form-control" placeholder="Completion Year" min="1950" max="2099" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <input type="text" name="12thSchool" class="form-control" placeholder="School Name" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <input type="text" name="12th board" class="form-control" placeholder="12th Board Name" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <input type="number" name="12thPercentage" class="form-control" placeholder="Percentage" min="0" max="100" step="0.01" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bachelor's Degree -->
+                            <div class="education-subsection">
+                                <h4>Bachelor's Degree</h4>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <input type="number" name="bachelorsYear" class="form-control" placeholder="Completion Year" min="1950" max="2099" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <input type="text" name="bachelorsUniversity" class="form-control" placeholder="University Name" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <input type="text" name="bachelorsDegree" class="form-control" placeholder="Degree" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <input type="number" name="bachelorsPercentage" class="form-control" placeholder="Percentage/CGPA" min="0" max="100" step="0.01" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Master's Degree (Optional) -->
+                            <div class="education-subsection">
+                                <h4>Master's Degree (Optional)</h4>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <input type="number" name="mastersYear" class="form-control" placeholder="Completion Year" min="1900" max="2099">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <input type="text" name="mastersUniversity" class="form-control" placeholder="University Name">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <input type="text" name="mastersDegree" class="form-control" placeholder="Degree">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <input type="number" name="mastersPercentage" class="form-control" placeholder="Percentage/CGPA" min="0" max="100" step="0.01">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-12 mb-3">
+                                <textarea name="additionalQualifications" class="form-control" placeholder="Additional Qualifications" rows="3"></textarea>
+                            </div>
+
+
+                            <div class="form-section">
+                                <h3 class="section-title">Desired Countries</h3>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <input type="text" name="desiredCountry1" class="form-control" placeholder="First Choice Country" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <input type="text" name="desiredCountry2" class="form-control" placeholder="Second Choice Country">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <input type="text" name="desiredCountry3" class="form-control" placeholder="Third Choice Country">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="section-title">English Proficiency Test</h3>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="examType">Select English Test:</label>
+                                    <select style="height: 45px;" id="examType" name="examType" class="form-control" required>
+                                        <option value="none">None</option>
+                                        <option value="ielts">IELTS</option>
+                                        <option value="pte">PTE</option>
+                                        <option value="oet">OET</option>    
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="examDate">From</label>
+                                    <input type="text" id="examDate" name="center location" class="form-control locked-field" disabled>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="examScore">Test Score</label>
+                                    <input type="text" id="examScore" name="examScore" class="form-control locked-field" placeholder="Enter your score" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-section">
+                            <h3 class="section-title">When would you like to study abroad ?</h3>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="startMonth">Month:</label>
+                                    <select style="height: 45px" id="startMonth" name="startMonth" class="form-control" required>
+                                        <option value="">Select Month</option>
+                                        <option value="January">January</option>
+                                        <option value="February">February</option>
+                                        <option value="March">March</option>
+                                        <option value="April">April</option>
+                                        <option value="May">May</option>
+                                        <option value="June">June</option>
+                                        <option value="July">July</option>
+                                        <option value="August">August</option>
+                                        <option value="September">September</option>
+                                        <option value="October">October</option>
+                                        <option value="November">November</option>
+                                        <option value="December">December</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="startYear">Year:</label>
+                                    <select style="height: 45px" id="startYear" name="AbroadYear" class="form-control" required>
+                                        <option value="">Select Year</option>
+                                        <!-- Years will be populated dynamically using JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="pass">Do you have Passport ?</label>
+                                    <select style="height: 45px;" id="pass" name="Passport" class="form-control" required>
+                                        <option value="none">None</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>    
+                                    </select>
+                                </div>
+                                <div class="col-md-8 mb-3">
+                                    <label for="about us">How do you know about us ?</label>
+                                    <select style="height: 45px" id="about us" name="about us" class="form-control" required>
+                                        <option value="search_engine">Search Engine (e.g., Google)</option>
+                                        <option value="social_media">Social Media</option>
+                                        <option value="friend_family">Friend or Family</option>
+                                        <option value="advertisement">Online Advertisement</option>
+                                        <option value="news_media">News or Media</option>
+                                        <option value="email">Email Campaign</option>
+                                        <option value="website">Your Website</option>
+                                        <option value="event">Event or Webinar</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
