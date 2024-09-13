@@ -29,6 +29,7 @@ function submitFormHandler(e) {
   const visaType = visaTypeElement.value;
   formData.append('Visa Type', visaType);
 
+
   // Handle combined countries logic
   if (visaType === 'student') {
     const combinedCountries = [
@@ -81,8 +82,7 @@ function submitFormHandler(e) {
     .then((result) => {
       console.log('Success:', result);
       alert('Thanks for submitting the form! We will contact you soon.');
-      this.reset(); // Reset only the submitted form
-      resetFormFields(visaType); // Reset only the relevant fields
+      resetToInitialState(); // Reset both forms and return to initial state
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -215,13 +215,37 @@ function handleHowYouKnowUs(selectId, inputId) {
     }
   });
 }
+function resetToInitialState() {
+  // Reset both forms
+  document.forms['google-sheet-student'].reset();
+  document.forms['google-sheet-visitor'].reset();
+
+  // Hide visitor form and show student form
+  $('#visitorVisaForm').hide();
+  $('#studentVisaForm').show();
+
+  // Select student radio button
+  $('input[name="visaType"][value="student"]').prop('checked', true);
+
+  // Reset all disabled fields
+  $('#examScore, #examDate').prop('disabled', true).val('');
+  $('#specificvisa, #otherpurpose, #visitedcountries, #rejectionreason, #otheroption, #otheroption1')
+    .prop('disabled', true)
+    .val('');
+
+  // Reset exam type
+  $('#examType').val('');
+
+  // Trigger change events to reset dependent fields
+  $('#examType, #typeofvisa, #purposeofvisit, #alreadyvisited, #rejection, #about_us, #about_us1').trigger('change');
+}
 
 function initForm() {
   const studentForm = document.forms['google-sheet-student'];
   const visitorForm = document.forms['google-sheet-visitor'];
 
-  if (studentForm) handleFormSubmit(studentForm);
-  if (visitorForm) handleFormSubmit(visitorForm);
+  if (studentForm) studentForm.addEventListener('submit', submitFormHandler);
+  if (visitorForm) visitorForm.addEventListener('submit', submitFormHandler);
 
   formatPhoneInput(document.getElementById('phone'));
   handleExamTypeChange();
@@ -235,8 +259,9 @@ function initForm() {
   handleHowYouKnowUs('#about_us', '#otheroption');
   handleHowYouKnowUs('#about_us1', '#otheroption1');
 
-  $('#studentVisaForm').show();
+  // Initially show the student form and select the student radio button
+  resetToInitialState();
 }
 
+// Use only one event listener for initialization
 $(document).ready(initForm);
-document.addEventListener('DOMContentLoaded', initForm);
