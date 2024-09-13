@@ -7,6 +7,11 @@ function getCurrentDateTime() {
   return { date, time };
 }
 
+function handleFormSubmit(form) {
+  form.removeEventListener('submit', submitFormHandler);
+  form.addEventListener('submit', submitFormHandler);
+}
+
 function submitFormHandler(e) {
   e.preventDefault();
   if (this.submitting) return;
@@ -28,7 +33,6 @@ function submitFormHandler(e) {
 
   const visaType = visaTypeElement.value;
   formData.append('Visa Type', visaType);
-
 
   // Handle combined countries logic
   if (visaType === 'student') {
@@ -64,8 +68,12 @@ function submitFormHandler(e) {
   // Process form data based on visa type
   for (let [key, value] of formData.entries()) {
     if (visaType === 'visitor') {
-      // For visitor form, keep the 'Visitor ' prefix
-      if (key.startsWith('Visitor ') || key === 'VisitorsDesiredCountries') {
+      // For visitor form, keep the 'Visitor ' prefix and include all visitor-related fields
+      if (
+        key.startsWith('Visitor ') ||
+        key === 'VisitorsDesiredCountries' ||
+        key === 'visitorNumber'
+      ) {
         dataToSend.append(key, value);
       }
     } else {
@@ -76,13 +84,17 @@ function submitFormHandler(e) {
 
   fetch(scriptURL, { method: 'POST', body: dataToSend })
     .then((response) => {
-      if (!response.ok) throw new Error('Network response was not ok');
-      return response.json();
-    })
-    .then((result) => {
-      console.log('Success:', result);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      console.log('Success:', response);
       alert('Thanks for submitting the form! We will contact you soon.');
-      resetToInitialState(); // Reset both forms and return to initial state
+
+      // Reset the form and show student visa form by default
+      resetFormState();
+      $('input[name="visaType"][value="student"]')
+        .prop('checked', true)
+        .trigger('change');
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -93,19 +105,32 @@ function submitFormHandler(e) {
     });
 }
 
-function resetFormFields(visaType) {
-  if (visaType === 'student') {
-    $('#examScore, #examDate').prop('disabled', true).val('');
-  } else if (visaType === 'visitor') {
-    $(
-      '#specificvisa, #otherpurpose, #visitedcountries, #rejectionreason, #otheroption, #otheroption1',
-    )
-      .prop('disabled', true)
-      .val('');
-  }
+function resetFormState() {
+  // Reset both forms
+  document.forms['google-sheet-student'].reset();
+  document.forms['google-sheet-visitor'].reset();
+
+  // Hide both visa forms
+  $('#studentVisaForm').hide();
+  $('#visitorVisaForm').hide();
+
+  // Uncheck all visa type radio buttons
+  $('input[name="visaType"]').prop('checked', false);
+
+  // Disable and clear specific fields
+  $('#examScore, #examDate').prop('disabled', true).val('');
+  $(
+    '#specificvisa, #otherpurpose, #visitedcountries, #rejectionreason, #otheroption, #otheroption1',
+  )
+    .prop('disabled', true)
+    .val('');
+
+  // Reset any other form-specific states here
+  // For example, if you have any custom select dropdowns, reset them to their default state
 }
 
 function handleVisaTypeSelection() {
+  $('#studentVisaForm').show();
   $('input[name="visaType"]').on('change', function () {
     const selectedType = $(this).val();
     $('.visa-form').hide();
@@ -215,37 +240,13 @@ function handleHowYouKnowUs(selectId, inputId) {
     }
   });
 }
-function resetToInitialState() {
-  // Reset both forms
-  document.forms['google-sheet-student'].reset();
-  document.forms['google-sheet-visitor'].reset();
-
-  // Hide visitor form and show student form
-  $('#visitorVisaForm').hide();
-  $('#studentVisaForm').show();
-
-  // Select student radio button
-  $('input[name="visaType"][value="student"]').prop('checked', true);
-
-  // Reset all disabled fields
-  $('#examScore, #examDate').prop('disabled', true).val('');
-  $('#specificvisa, #otherpurpose, #visitedcountries, #rejectionreason, #otheroption, #otheroption1')
-    .prop('disabled', true)
-    .val('');
-
-  // Reset exam type
-  $('#examType').val('');
-
-  // Trigger change events to reset dependent fields
-  $('#examType, #typeofvisa, #purposeofvisit, #alreadyvisited, #rejection, #about_us, #about_us1').trigger('change');
-}
 
 function initForm() {
   const studentForm = document.forms['google-sheet-student'];
   const visitorForm = document.forms['google-sheet-visitor'];
 
-  if (studentForm) studentForm.addEventListener('submit', submitFormHandler);
-  if (visitorForm) visitorForm.addEventListener('submit', submitFormHandler);
+  if (studentForm) handleFormSubmit(studentForm);
+  if (visitorForm) handleFormSubmit(visitorForm);
 
   formatPhoneInput(document.getElementById('phone'));
   handleExamTypeChange();
@@ -259,9 +260,8 @@ function initForm() {
   handleHowYouKnowUs('#about_us', '#otheroption');
   handleHowYouKnowUs('#about_us1', '#otheroption1');
 
-  // Initially show the student form and select the student radio button
-  resetToInitialState();
+  $('#studentVisaForm').show();
 }
 
-// Use only one event listener for initialization
 $(document).ready(initForm);
+document.addEventListener('DOMContentLoaded', initForm);
