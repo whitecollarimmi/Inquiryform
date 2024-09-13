@@ -7,11 +7,6 @@ function getCurrentDateTime() {
   return { date, time };
 }
 
-function handleFormSubmit(form) {
-  form.removeEventListener('submit', submitFormHandler);
-  form.addEventListener('submit', submitFormHandler);
-}
-
 function submitFormHandler(e) {
   e.preventDefault();
   if (this.submitting) return;
@@ -60,10 +55,8 @@ function submitFormHandler(e) {
   // Create a new FormData object for the data to be sent
   const dataToSend = new FormData();
 
-  // Add visa type
+  // Add visa type, submission date and time
   dataToSend.append('Visa Type', visaType);
-
-  // Add submission date and time
   dataToSend.append('Submission Date', date);
   dataToSend.append('Submission Time', time);
 
@@ -88,7 +81,8 @@ function submitFormHandler(e) {
     .then((result) => {
       console.log('Success:', result);
       alert('Thanks for submitting the form! We will contact you soon.');
-      resetFormState();
+      this.reset(); // Reset only the submitted form
+      resetFormFields(visaType); // Reset only the relevant fields
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -99,25 +93,19 @@ function submitFormHandler(e) {
     });
 }
 
-function resetFormState() {
-  document.forms['google-sheet-student'].reset();
-  document.forms['google-sheet-visitor'].reset();
-  $('#studentVisaForm').hide();
-  $('#visitorVisaForm').hide();
-  $('input[name="visaType"]').prop('checked', false);
-  $('#examScore, #examDate').prop('disabled', true).val('');
-  $(
-    '#specificvisa, #otherpurpose, #visitedcountries, #rejectionreason, #otheroption, #otheroption1',
-  )
-    .prop('disabled', true)
-    .val('');
+function resetFormFields(visaType) {
+  if (visaType === 'student') {
+    $('#examScore, #examDate').prop('disabled', true).val('');
+  } else if (visaType === 'visitor') {
+    $(
+      '#specificvisa, #otherpurpose, #visitedcountries, #rejectionreason, #otheroption, #otheroption1',
+    )
+      .prop('disabled', true)
+      .val('');
+  }
 }
 
 function handleVisaTypeSelection() {
-  // Remove any existing event listeners
-  $('input[name="visaType"]').off('change');
-
-  // Add new event listener
   $('input[name="visaType"]').on('change', function () {
     const selectedType = $(this).val();
     $('.visa-form').hide();
@@ -127,15 +115,6 @@ function handleVisaTypeSelection() {
       $('#visitorVisaForm').show();
     }
   });
-
-  // Trigger change event on page load if a visa type is already selected
-  const selectedVisaType = $('input[name="visaType"]:checked').val();
-  if (selectedVisaType) {
-    $('input[name="visaType"]:checked').trigger('change');
-  } else {
-    // Hide both forms if no visa type is selected
-    $('.visa-form').hide();
-  }
 }
 
 function formatPhoneInput(input) {
@@ -256,9 +235,8 @@ function initForm() {
   handleHowYouKnowUs('#about_us', '#otheroption');
   handleHowYouKnowUs('#about_us1', '#otheroption1');
 
-  // Add this line to ensure visa type selection works on page load
-  handleVisaTypeSelection();
+  $('#studentVisaForm').show();
 }
 
-// Use only one event listener for initialization
 $(document).ready(initForm);
+document.addEventListener('DOMContentLoaded', initForm);
