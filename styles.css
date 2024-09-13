@@ -328,8 +328,8 @@ select {
     line-height: 35px; /* Increased line height to match new radio button size */
     user-select: none;
     transition: all 0.2s ease;
-    font-weight: bolder; /* Make the label text bold */
-    font-size: x-large;
+    font-weight: 900; /* Make the label text bold */
+    font-size: xx-large;
 }
 
 .form-check-label:before {
