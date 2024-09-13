@@ -315,67 +315,83 @@ select {
     padding-left: 0;
     margin-bottom: 1rem;
 }
-  
+
 .form-check-input {
-display: none;
+    display: none;
 }
 
 .form-check-label {
-position: relative;
-padding-left: 35px;
-cursor: pointer;
-font-size: 1rem;
-line-height: 25px;
-user-select: none;
-transition: all 0.2s ease;
+    position: relative;
+    padding-left: 45px; /* Increased padding to accommodate larger radio button */
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 35px; /* Increased line height to match new radio button size */
+    user-select: none;
+    transition: all 0.2s ease;
+    font-weight: bolder; /* Make the label text bold */
+    font-size: x-large;
 }
 
 .form-check-label:before {
-content: '';
-position: absolute;
-left: 0;
-top: 0;
-width: 25px;
-height: 25px;
-border: 2px solid #007bff;
-border-radius: 50%;
-background: #fff;
-transition: all 0.2s ease;
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 35px; /* Increased size */
+    height: 35px; /* Increased size */
+    border: 2px solid #007bff;
+    border-radius: 50%;
+    background: #fff;
+    transition: all 0.2s ease;
 }
 
 .form-check-label:after {
-content: '';
-position: absolute;
-left: 5px;
-top: 5px;
-width: 15px;
-height: 15px;
-border-radius: 50%;
-background: #007bff;
-transition: all 0.2s ease;
-opacity: 0;
-transform: scale(0);
+    content: '';
+    position: absolute;
+    left: 7px; /* Adjusted position */
+    top: 7px; /* Adjusted position */
+    width: 21px; /* Increased size */
+    height: 21px; /* Increased size */
+    border-radius: 50%;
+    background: #007bff;
+    transition: all 0.2s ease;
+    opacity: 0;
+    transform: scale(0);
 }
 
 .form-check-input:checked + .form-check-label:before {
-border-color: #007bff;
+    border-color: #007bff;
 }
 
 .form-check-input:checked + .form-check-label:after {
-opacity: 1;
-transform: scale(1);
+    opacity: 1;
+    transform: scale(1);
 }
 
 .form-check-label:hover:before {
-box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 @media (max-width: 767px) {
-.form-check {
-    margin-bottom: 0.5rem;
-}
-
+    .form-check {
+        margin-bottom: 0.5rem;
+    }
+    
     .form-check-label {
         font-size: 0.9rem;
+        padding-left: 40px; /* Slightly reduced padding for mobile */
+        line-height: 30px; /* Slightly reduced line height for mobile */
+    }
+    
+    .form-check-label:before {
+        width: 30px; /* Slightly reduced size for mobile */
+        height: 30px; /* Slightly reduced size for mobile */
+    }
+    
+    .form-check-label:after {
+        left: 6px; /* Adjusted position for mobile */
+        top: 6px; /* Adjusted position for mobile */
+        width: 18px; /* Slightly reduced size for mobile */
+        height: 18px; /* Slightly reduced size for mobile */
     }
 }
