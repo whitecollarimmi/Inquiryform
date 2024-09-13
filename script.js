@@ -114,8 +114,7 @@ function resetFormState() {
 }
 
 function handleVisaTypeSelection() {
-  $('#studentVisaForm').show();
-  $('input[name="visaType"]').on('change', function () {
+  $('input[name="visaType"]').off('change').on('change', function () {
     const selectedType = $(this).val();
     $('.visa-form').hide();
     if (selectedType === 'student') {
@@ -244,7 +243,8 @@ function initForm() {
   handleHowYouKnowUs('#about_us', '#otheroption');
   handleHowYouKnowUs('#about_us1', '#otheroption1');
 
-  $('#studentVisaForm').show();
+  // Remove this line to prevent automatically showing the student form
+  // $('#studentVisaForm').show();
 }
 
 $(document).ready(initForm);
