@@ -114,7 +114,11 @@ function resetFormState() {
 }
 
 function handleVisaTypeSelection() {
-  $('input[name="visaType"]').off('change').on('change', function () {
+  // Remove any existing event listeners
+  $('input[name="visaType"]').off('change');
+
+  // Add new event listener
+  $('input[name="visaType"]').on('change', function () {
     const selectedType = $(this).val();
     $('.visa-form').hide();
     if (selectedType === 'student') {
@@ -123,6 +127,15 @@ function handleVisaTypeSelection() {
       $('#visitorVisaForm').show();
     }
   });
+
+  // Trigger change event on page load if a visa type is already selected
+  const selectedVisaType = $('input[name="visaType"]:checked').val();
+  if (selectedVisaType) {
+    $('input[name="visaType"]:checked').trigger('change');
+  } else {
+    // Hide both forms if no visa type is selected
+    $('.visa-form').hide();
+  }
 }
 
 function formatPhoneInput(input) {
@@ -243,9 +256,9 @@ function initForm() {
   handleHowYouKnowUs('#about_us', '#otheroption');
   handleHowYouKnowUs('#about_us1', '#otheroption1');
 
-  // Remove this line to prevent automatically showing the student form
-  // $('#studentVisaForm').show();
+  // Add this line to ensure visa type selection works on page load
+  handleVisaTypeSelection();
 }
 
+// Use only one event listener for initialization
 $(document).ready(initForm);
-document.addEventListener('DOMContentLoaded', initForm);
