@@ -329,7 +329,7 @@ select {
     user-select: none;
     transition: all 0.2s ease;
     font-weight: 900; /* Make the label text bold */
-    font-size: xx-large;
+    font-size: x-large;
 }
 
 .form-check-label:before {
