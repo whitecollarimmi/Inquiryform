@@ -1,90 +1,164 @@
 const scriptURL =
   'https://script.google.com/macros/s/AKfycbyctKpB7I7is02rejzLAeXRljmqQ9ZmBSfT4VzVu1ZUDme9MT6L1DEMIyVVLOPKyn2tVA/exec';
-const form = document.forms['google-sheet'];
-
-// Function to get current date and time in separate strings
 function getCurrentDateTime() {
   const now = new Date();
-  const date = now.toLocaleDateString(); // e.g., "8/30/2024"
-  const time = now.toLocaleTimeString(); // e.g., "10:15:30 AM"
+  const date = now.toLocaleDateString();
+  const time = now.toLocaleTimeString();
   return { date, time };
 }
 
-form.addEventListener('submit', (e) => {
+function handleFormSubmit(form) {
+  form.removeEventListener('submit', submitFormHandler);
+  form.addEventListener('submit', submitFormHandler);
+}
+
+function submitFormHandler(e) {
   e.preventDefault();
+  if (this.submitting) return;
+  this.submitting = true;
 
-  // Create a new FormData object
-  const formData = new FormData(form);
-
-  // Get the current date and time
+  const formData = new FormData(this);
   const { date, time } = getCurrentDateTime();
-
-  // Add the current date and time to the form data
   formData.append('Submission Date', date);
   formData.append('Submission Time', time);
 
-  // Handle combined countries if needed
-  const country1 = formData.get('desiredCountry1') || '';
-  const country2 = formData.get('desiredCountry2') || '';
-  const country3 = formData.get('desiredCountry3') || '';
-  const combinedCountries = [country1, country2, country3]
-    .filter((country) => country.trim() !== '')
-    .join(', ');
+  const visaTypeElement = document.querySelector(
+    'input[name="visaType"]:checked',
+  );
+  if (!visaTypeElement) {
+    alert('Please select a visa type before submitting.');
+    this.submitting = false;
+    return;
+  }
 
-  formData.set('combinedDesiredCountries', combinedCountries);
+  const visaType = visaTypeElement.value;
+  formData.append('Visa Type', visaType);
 
-  fetch(scriptURL, { method: 'POST', body: formData })
-    .then((response) => response.json())
-    .then((result) => {
-      alert('Thanks for submitting the form! We will contact you soon.');
-      form.reset(); // Reset the form after successful submission
+  // Handle combined countries logic
+  if (visaType === 'student') {
+    const combinedCountries = [
+      'desiredCountry1',
+      'desiredCountry2',
+      'desiredCountry3',
+    ]
+      .map((key) => formData.get(key) || '')
+      .filter((country) => country.trim() !== '')
+      .join(', ');
+    formData.set('combinedDesiredCountries', combinedCountries);
+  } else if (visaType === 'visitor') {
+    const visitorCombinedCountries = [
+      'Visitors desiredCountry1',
+      'Visitors desiredCountry2',
+      'Visitors desiredCountry3',
+    ]
+      .map((key) => formData.get(key) || '')
+      .filter((country) => country.trim() !== '')
+      .join(', ');
+    formData.set('VisitorsDesiredCountries', visitorCombinedCountries);
+  }
+
+  // Create a new FormData object for the data to be sent
+  const dataToSend = new FormData();
+
+  // Add visa type
+  dataToSend.append('Visa Type', visaType);
+
+  // Add submission date and time
+  dataToSend.append('Submission Date', date);
+  dataToSend.append('Submission Time', time);
+
+  // Process form data based on visa type
+  for (let [key, value] of formData.entries()) {
+    if (visaType === 'visitor') {
+      // For visitor form, keep the 'Visitor ' prefix
+      if (key.startsWith('Visitor ') || key === 'VisitorsDesiredCountries') {
+        dataToSend.append(key, value);
+      }
+    } else {
+      // For student form, add all fields as they are
+      dataToSend.append(key, value);
+    }
+  }
+
+  fetch(scriptURL, { method: 'POST', body: dataToSend })
+    .then((response) => {
+      if (!response.ok) throw new Error('Network response was not ok');
+      return response.json();
     })
-    .catch((error) => console.error('Error!', error.message));
-});
+    .then((result) => {
+      console.log('Success:', result);
+      alert('Thanks for submitting the form! We will contact you soon.');
+      resetFormState();
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      alert('There was an error submitting the form. Please try again.');
+    })
+    .finally(() => {
+      this.submitting = false;
+    });
+}
 
-// Format phone input to accept only numbers
-document.getElementById('phone').addEventListener('input', function (e) {
-  var x = e.target.value.replace(/\D/g, '').match(/(\d{0,10})/);
-  e.target.value = x[1];
-});
+function resetFormState() {
+  document.forms['google-sheet-student'].reset();
+  document.forms['google-sheet-visitor'].reset();
+  $('#studentVisaForm').hide();
+  $('#visitorVisaForm').hide();
+  $('input[name="visaType"]').prop('checked', false);
+  $('#examScore, #examDate').prop('disabled', true).val('');
+  $(
+    '#specificvisa, #otherpurpose, #visitedcountries, #rejectionreason, #otheroption, #otheroption1',
+  )
+    .prop('disabled', true)
+    .val('');
+}
 
-// Handle exam type changes
-$('#examType').on('change', function () {
-  var selectedExam = $(this).val();
-  var isExamSelected = ['ielts', 'pte', 'oet'].includes(selectedExam);
+function handleVisaTypeSelection() {
+  $('#studentVisaForm').show();
+  $('input[name="visaType"]').on('change', function () {
+    const selectedType = $(this).val();
+    $('.visa-form').hide();
+    if (selectedType === 'student') {
+      $('#studentVisaForm').show();
+    } else if (selectedType === 'visitor') {
+      $('#visitorVisaForm').show();
+    }
+  });
+}
 
-  $('#examScore, #examDate')
-    .prop('disabled', !isExamSelected)
-    .toggleClass('locked-field', !isExamSelected);
+function formatPhoneInput(input) {
+  input.addEventListener('input', function (e) {
+    var x = e.target.value.replace(/\D/g, '').substring(0, 10);
+    e.target.value = x;
+  });
+}
 
-  if (!isExamSelected) {
-    $('#examScore, #examDate').val('');
-  }
+function handleExamTypeChange() {
+  $('#examType').on('change', function () {
+    var selectedExam = $(this).val();
+    var isExamSelected = ['ielts', 'pte', 'oet'].includes(selectedExam);
+    $('#examScore, #examDate')
+      .prop('disabled', !isExamSelected)
+      .toggleClass('locked-field', !isExamSelected);
+    if (!isExamSelected) {
+      $('#examScore, #examDate').val('');
+    }
+    // Update placeholder based on selected exam
+    if (selectedExam === 'ielts') {
+      $('#examScore').attr('placeholder', 'Enter IELTS band score (e.g., 7.5)');
+    } else if (selectedExam === 'pte') {
+      $('#examScore').attr('placeholder', 'Enter PTE score (10-90)');
+    } else if (selectedExam === 'oet') {
+      $('#examScore').attr('placeholder', 'Enter OET grade (e.g., B, C+)');
+    } else {
+      $('#examScore').attr('placeholder', 'Enter your score');
+    }
+  });
+}
 
-  // Update placeholder based on selected exam
-  if (selectedExam === 'ielts') {
-    $('#examScore').attr('placeholder', 'Enter IELTS band score (e.g., 7.5)');
-  } else if (selectedExam === 'pte') {
-    $('#examScore').attr('placeholder', 'Enter PTE score (10-90)');
-  } else if (selectedExam === 'oet') {
-    $('#examScore').attr('placeholder', 'Enter OET grade (e.g., B, C+)');
-  } else {
-    $('#examScore').attr('placeholder', 'Enter your score');
-  }
-});
-
-// Disable exam score and date if "none" is selected
-$('form[name="google-sheet"]').on('submit', function (e) {
-  var selectedExam = $('#examType').val();
-  if (selectedExam === 'none') {
-    $('#examScore, #examDate').prop('disabled', true).val('');
-  }
-});
-
-// Populate years for dropdown
-function populateYears() {
+function populateYears(selectId) {
   const currentYear = new Date().getFullYear();
-  const selectYear = document.getElementById('startYear');
+  const selectYear = document.getElementById(selectId);
   for (let year = currentYear; year <= 2099; year++) {
     const option = document.createElement('option');
     option.value = year;
@@ -93,5 +167,85 @@ function populateYears() {
   }
 }
 
-// Call the function when the document is loaded
-document.addEventListener('DOMContentLoaded', populateYears);
+function handleOtherVisaType() {
+  $('#typeofvisa').change(function () {
+    var isOtherSelected = $(this).val() === 'Other';
+    $('#specificvisa')
+      .prop('disabled', !isOtherSelected)
+      .toggleClass('locked-field', !isOtherSelected);
+    if (!isOtherSelected) {
+      $('#specificvisa').val('');
+    }
+  });
+}
+
+function handlePurposeOfVisit() {
+  $('#purposeofvisit').change(function () {
+    var isOther = $(this).val() === 'Other';
+    $('#otherpurpose')
+      .prop('disabled', !isOther)
+      .toggleClass('locked-field', !isOther);
+    if (!isOther) {
+      $('#otherpurpose').val('');
+    }
+  });
+}
+
+function handleInternationalTravel() {
+  $('#alreadyvisited').change(function () {
+    var isVisited = $(this).val() === 'Yes';
+    $('#visitedcountries')
+      .prop('disabled', !isVisited)
+      .toggleClass('locked-field', !isVisited);
+    if (!isVisited) {
+      $('#visitedcountries').val('');
+    }
+  });
+}
+
+function handleVisaRejection() {
+  $('#rejection').change(function () {
+    var isRejected = $(this).val() === 'Yes';
+    $('#rejectionreason')
+      .prop('disabled', !isRejected)
+      .toggleClass('locked-field', !isRejected);
+    if (!isRejected) {
+      $('#rejectionreason').val('');
+    }
+  });
+}
+
+function handleHowYouKnowUs(selectId, inputId) {
+  $(selectId).change(function () {
+    var isOther = $(this).val() === 'Other';
+    $(inputId).prop('disabled', !isOther).toggleClass('locked-field', !isOther);
+    if (!isOther) {
+      $(inputId).val('');
+    }
+  });
+}
+
+function initForm() {
+  const studentForm = document.forms['google-sheet-student'];
+  const visitorForm = document.forms['google-sheet-visitor'];
+
+  if (studentForm) handleFormSubmit(studentForm);
+  if (visitorForm) handleFormSubmit(visitorForm);
+
+  formatPhoneInput(document.getElementById('phone'));
+  handleExamTypeChange();
+  populateYears('startYear');
+  populateYears('startYear1');
+  handleVisaTypeSelection();
+  handleOtherVisaType();
+  handlePurposeOfVisit();
+  handleInternationalTravel();
+  handleVisaRejection();
+  handleHowYouKnowUs('#about_us', '#otheroption');
+  handleHowYouKnowUs('#about_us1', '#otheroption1');
+
+  $('#studentVisaForm').show();
+}
+
+$(document).ready(initForm);
+document.addEventListener('DOMContentLoaded', initForm);
