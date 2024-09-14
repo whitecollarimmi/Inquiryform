@@ -207,19 +207,6 @@ function handlePurposeOfVisit() {
   });
 }
 
-function handleVisaPassport() {
-  $('#pass').on('change', function () {
-    var hasPassport = $(this).val() === 'Yes';
-    $('#alreadyvisited')
-      .prop('disabled', !hasPassport)
-      .toggleClass('locked-field', !hasPassport);
-
-    if (!hasPassport) {
-      $('#alreadyvisited').val('');
-    }
-  });
-}
-
 function handleInternationalTravel() {
   $('#alreadyvisited').change(function () {
     var isVisited = $(this).val() === 'Yes';
@@ -268,7 +255,6 @@ function initForm() {
   handleVisaTypeSelection();
   handleOtherVisaType();
   handlePurposeOfVisit();
-  handleVisaPassport();
   handleInternationalTravel();
   handleVisaRejection();
   handleHowYouKnowUs('#about_us', '#otheroption');
