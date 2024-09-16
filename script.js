@@ -1,5 +1,5 @@
 const scriptURL =
-  https://script.google.com/macros/s/AKfycbyctKpB7I7is02rejzLAeXRljmqQ9ZmBSfT4VzVu1ZUDme9MT6L1DEMIyVVLOPKyn2tVA/exec';
+  'https://script.google.com/macros/s/AKfycbx1T57fOgxA08n9tP9tub99XuST2kX3V1ctKyUDNh7JxzPQpg38zoEtuEivcgLlGzXl3A/exec';
 const form = document.forms['google-sheet'];
 
 // Function to get current date and time in separate strings
