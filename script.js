@@ -1,8 +1,7 @@
 const scriptURL =
-  'https://script.google.com/macros/s/AKfycbyctKpB7I7is02rejzLAeXRljmqQ9ZmBSfT4VzVu1ZUDme9MT6L1DEMIyVVLOPKyn2tVA/exec';
+  'https://script.google.com/macros/s/AKfycbx1T57fOgxA08n9tP9tub99XuST2kX3V1ctKyUDNh7JxzPQpg38zoEtuEivcgLlGzXl3A/exec';
 const form = document.forms['google-sheet'];
 
-// Function to get current date and time in separate strings
 function getCurrentDateTime() {
   const now = new Date();
   const date = now.toLocaleDateString();
@@ -44,7 +43,7 @@ form.addEventListener('submit', (e) => {
     .catch((error) => console.error('Error!', error.message));
 });
 
-// Format phone input to accept only numbers
+
 document.getElementById('phone').addEventListener('input', function (e) {
   e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
 });
@@ -53,7 +52,7 @@ document.getElementById('phone1').addEventListener('input', function (e) {
   e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
 });
 
-// Handle exam type changes
+
 document.getElementById('examType').addEventListener('change', function () {
   const selectedExam = this.value;
   const isExamSelected = ['ielts', 'pte', 'oet'].includes(selectedExam);
@@ -70,7 +69,6 @@ document.getElementById('examType').addEventListener('change', function () {
     examDate.value = '';
   }
 
-  // Update placeholder based on selected exam
   if (selectedExam === 'ielts') {
     examScore.placeholder = 'Enter IELTS band score (e.g., 7.5)';
   } else if (selectedExam === 'pte') {
@@ -82,7 +80,6 @@ document.getElementById('examType').addEventListener('change', function () {
   }
 });
 
-// Populate years for dropdown
 function populateYears() {
   const currentYear = new Date().getFullYear();
   const selectYear = document.getElementById('startYear');
@@ -127,7 +124,7 @@ function handleOtherVisaType() {
 
   typeOfVisaSelect.addEventListener('change', updateSpecificVisa);
 
-  // Call the function initially to set the correct state
+
   updateSpecificVisa();
 }
 
@@ -153,7 +150,7 @@ function handlePurposeOfVisit() {
 
   purposeOfVisitSelect.addEventListener('change', updateOtherPurpose);
 
-  // Call the function initially to set the correct state
+  
   updateOtherPurpose();
 }
 
@@ -171,16 +168,16 @@ function handleTravelFields() {
     const hasPassport = passportSelect.value === 'Yes';
     const hasTravelledBefore = travelledBeforeSelect.value === 'Yes';
 
-    // Enable/disable the "Have you travelled Abroad before?" field
+    
     travelledBeforeSelect.disabled = !hasPassport;
     travelledBeforeSelect.classList.toggle('locked-field', !hasPassport);
 
-    // If passport is not "Yes", reset the travelledBefore field
+    
     if (!hasPassport) {
       travelledBeforeSelect.value = 'none';
     }
 
-    // Enable/disable the "Visited Countries" field
+  
     visitedCountriesTextarea.disabled = !(hasPassport && hasTravelledBefore);
     visitedCountriesTextarea.classList.toggle(
       'locked-field',
@@ -222,11 +219,11 @@ function handleVisaRejection() {
 
   rejectionSelect.addEventListener('change', updateRejectionReason);
 
-  // Call the function initially to set the correct state
+  
   updateRejectionReason();
 }
 
-// Call the function when the document is loaded
+
 document.addEventListener('DOMContentLoaded', () => {
   populateYears();
   populateYears1();
